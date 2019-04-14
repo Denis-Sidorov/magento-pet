@@ -36,5 +36,5 @@ $params[Bootstrap::INIT_PARAM_FILESYSTEM_DIR_PATHS] = array_replace_recursive(
 );
 $bootstrap = \Magento\Framework\App\Bootstrap::create(BP, $params);
 /** @var \Magento\Framework\App\Http $app */
-$app = $bootstrap->createApplication(\Magento\Framework\App\Http::class);throw new Except123ion("zxc");
+$app = $bootstrap->createApplication(\Magento\Framework\App\Http::class);
 $bootstrap->run($app);
