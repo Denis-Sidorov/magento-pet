@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-alpine
+FROM php:7.2-cli-alpine
 
 ARG INSTALL_XDEBUG=false
 
@@ -76,18 +76,25 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
         apk del --purge ${PHPIZE_DEPS} \
     ;fi
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php composer-setup.php --install-dir=/usr/bin --filename=composer && \
-    php -r "unlink('composer-setup.php');"
+RUN apk add --update busybox-suid
 
 RUN ln -sf /proc/1/fd/1 /var/log/php_error.log && \
     chown www-data:www-data /var/log/php_error.log
 
+RUN ln -sf /proc/1/fd/1 /var/log/cron.log && \
+    chown www-data:www-data /var/log/cron.log
+
 RUN mkdir /var/www/app && \
     chown www-data:www-data /var/www/app
+
 WORKDIR /var/www/app
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY errors.ini /usr/local/etc/php/conf.d/php-error.ini
 COPY datetime.ini /usr/local/etc/php/conf.d/php-datetime.ini
 COPY resources.ini /usr/local/etc/php/conf.d/php-resources.ini
+
+COPY cron.conf /tmp/cron.conf
+RUN crontab -u www-data /tmp/cron.conf
+
+CMD ["crond", "-f", "-L", "/dev/stdout"]
