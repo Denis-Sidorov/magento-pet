@@ -25,6 +25,26 @@ services:
       - PHP_XDEBUG_REMOTE_CONNECT_BACK=${PHP_XDEBUG_REMOTE_CONNECT_BACK}
       - PHP_XDEBUG_REMOTE_PORT=${PHP_XDEBUG_REMOTE_PORT}
 
+  cron:
+    build:
+      context: docker/cron
+      args:
+        - INSTALL_XDEBUG=${INSTALL_XDEBUG}
+    image: mage-cron
+    container_name: mage-cron
+    volumes:
+      - ./src:/var/www/app
+    environment:
+      - PHP_IDE_CONFIG=serverName=localhost
+      - PHP_DATE_TIMEZONE=${PHP_DATE_TIMEZONE}
+      - PHP_ERROR_REPORTING=${PHP_ERROR_REPORTING_DEV}
+      - PHP_MAX_EXECUTION_TIME=${CRON_PHP_MAX_EXECUTION_TIME}
+      - PHP_MEMORY_LIMIT=${CRON_PHP_MEMORY_LIMIT}
+      - PHP_XDEBUG_REMOTE_AUTOSTART=${PHP_XDEBUG_REMOTE_AUTOSTART}
+      - PHP_XDEBUG_REMOTE_CONNECT_BACK=${PHP_XDEBUG_REMOTE_CONNECT_BACK}
+      - PHP_XDEBUG_REMOTE_HOST=${PHP_XDEBUG_REMOTE_HOST}
+      - PHP_XDEBUG_REMOTE_PORT=${PHP_XDEBUG_REMOTE_PORT}
+
   server:
     build: ./docker/nginx
     image: mage-server

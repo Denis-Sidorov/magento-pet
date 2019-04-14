@@ -16,7 +16,7 @@ Variables pass into containers by docker-compose.
     docker-compose exec app chmod g+rwX -R .
     docker-compose exec app find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+s {} +    
     docker-compose exec app chown -R :www-data .
-    docker-compose exec app chmod u+x bin/magento
+    docker-compose exec app chmod 775 bin/magento
 
 ### Host (local)
 
